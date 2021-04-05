@@ -1,0 +1,45 @@
+target
+.settings/
+.classpath
+git
+
+# java
+hs_err_pid*.log
+*.jar
+*.log
+*.class
+
+# gradle
+.gradle
+**/build/
+!src/**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# intellij
+.idea/
+*.iml
+**/build/*
+*/out/
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
