@@ -4,18 +4,31 @@ import org.slf4j.event.Level
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
-fun main() {
-    try {
-        throw Exception("fkdsafkdf")
-    } catch (e: Exception) {
-        Log.error("asdf", e)
+object Log {
+    data class Policy(val path: String, val logLevel: Level)
+
+    class Config(val defaultLogLevel: Level = Level.INFO) {
+        internal val logPolicies = mutableListOf<Policy>()
+
+        fun addPolicy(logPolicy: Policy) {
+            logPolicies.add(logPolicy)
+        }
+
+        fun addPolicy(path: String, level: Level) {
+            addPolicy(Policy(path, level))
+        }
+
+        fun addPolicy(clazz: Class<*>, level: Level) {
+            addPolicy(clazz.name, level)
+        }
     }
 
+    private object CallingClass : SecurityManager() {
+        fun get(index:Int): Class<*> {
+            return classContext[index]
+        }
+    }
 
-    Log.debug("asdf")
-}
-
-object Log {
     @JvmStatic
     var config = Config()
 
@@ -27,7 +40,6 @@ object Log {
                 mostSpecificPolicy = policy
             }
         }
-
         if (mostSpecificPolicy.logLevel < level) return
 
         val time = LocalTime.now().truncatedTo(ChronoUnit.SECONDS)
@@ -68,29 +80,5 @@ object Log {
     @JvmOverloads
     fun error(message: Any?, throwable: Throwable? = null, classLabel: Class<*> = CallingClass.get(3)) {
         log(Level.ERROR, message, throwable, classLabel)
-    }
-
-    data class Policy(val path: String, val logLevel: Level)
-
-    class Config(val defaultLogLevel: Level = Level.INFO) {
-        internal val logPolicies = mutableListOf<Policy>()
-
-        fun addPolicy(logPolicy: Policy) {
-            logPolicies.add(logPolicy)
-        }
-
-        fun addPolicy(path: String, level: Level) {
-            addPolicy(Policy(path, level))
-        }
-
-        fun addPolicy(clazz: Class<*>, level: Level) {
-            addPolicy(clazz.name, level)
-        }
-    }
-
-    private object CallingClass : SecurityManager() {
-        fun get(index:Int): Class<*> {
-            return classContext[index]
-        }
     }
 }
