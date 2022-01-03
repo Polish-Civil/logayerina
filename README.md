@@ -1,1 +1,1 @@
-dog more like log
+dog more like log.
